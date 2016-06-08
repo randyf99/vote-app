@@ -2,16 +2,29 @@ const ProductList = React.createClass({
   getInitialState: function() {
     return {
       products: [],
+      sort: 'desc'
     };
+  },
+  switchSort: function() {
+    this.state.sort = this.state.sort === 'desc' ? 'asc' : 'desc';
+    this.updateState();
   },
   componentDidMount: function() {
     this.updateState();
   },
   updateState: function() {
-     const products = Data.sort((a, b) => {
-     return b.votes - a.votes;
-  });
-    this.setState({products: products});
+    if (this.state.sort == 'desc') {
+      const products = Data.sort((a, b) => {
+        return b.votes - a.votes;
+      });
+      this.setState({products: products, sort: this.state.sort});
+    }
+    else {
+      const products = Data.sort((a, b) => {
+        return a.votes - b.votes;
+      });
+      this.setState({products: products, sort: this.state.sort});
+    }
   },
   handleProductUpVote: function(productId) {
     Data.forEach((el) => {
@@ -36,7 +49,7 @@ const ProductList = React.createClass({
     return (
         <Product
           key={'product' + product.id}
-          id={product.id} 
+          id={product.id}
           title={product.title}
           description={product.description}
           url={product.url}
@@ -50,8 +63,9 @@ const ProductList = React.createClass({
   });
     return (
         <div className="ui items">
+        <a onClick={this.switchSort}><i className='large caret up icon'/></a>
           {products}
-        </div>    
+        </div>
     );
   },
 });
